@@ -6,7 +6,7 @@ Write something here about what the code does and stuff
 import pandas as pd 
 
 # importing csv and converting to a dataframe
-df_fatal_accidents = pd.read_csv('Verkeersdoden_vanaf_1950.csv')
+df_fatal_accidents = pd.read_csv('data/Verkeersdoden_vanaf_1950.csv')
 
 ## cleaning up csv file
 # removing Vervoerswijze and keeping transportmode
