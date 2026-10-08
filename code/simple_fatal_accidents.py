@@ -8,6 +8,6 @@ df_fatal_accidents_2013_plus = df_fatal_accidents[(df_fatal_accidents['Year'] >=
                                                   (df_fatal_accidents['Age group'].isin(['0 t/m 4', '5 t/m 9', '10 t/m 14', '15 t/m 19']))]
 
 
-p1 = px.bar(df_fatal_accidents_2013_plus, x='Year', y='Fatalities')
+p1 = px.bar(df_fatal_accidents_2013_plus, x='Year', y='Fatalities', title='Fatal Accidents in the Netherlands (2013 and later)', barmode='group')
 p1.show()
 #print(df_fatal_accidents_2013_plus.head())
