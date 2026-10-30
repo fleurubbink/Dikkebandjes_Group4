@@ -1,5 +1,4 @@
 import pandas as pd
-import plotly.express as px
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
@@ -8,9 +7,6 @@ moped_possesion = pd.read_csv('data/Voertuigen met een bromfietskenteken, 1 janu
 
 #filter the data for the correct ages and vehicles
 moped_possesion_filtered = moped_possesion[["Jaar", "Snorfiets", "Bromfiets"]]
-#moped_possesion_filtered_melted = pd.melt(moped_possesion_filtered, id_vars='Jaar')
-#print(moped_possesion_filtered)
-
 
 #code for the plots
 def plot_moped_possesion():
@@ -38,3 +34,10 @@ def plot_moped_possesion():
     return fig, ax
 
 plot_moped_possesion()
+
+#rate of decrease for moped possession after the helmet requirement
+moped_2023 = 761
+moped_2026 = 534
+rate = (moped_2023 - moped_2026) / moped_2023 * 100
+
+print(rate)
