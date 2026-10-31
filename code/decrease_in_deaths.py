@@ -19,7 +19,6 @@ b = 21
 bicycle_2026 = a * 1 + b
 bicycle_2027 = a * 2 + b
 
-#math for extension of trend line to 2028
 bicycle_extension = [19, bicycle_2026, bicycle_2027, bicycle_2028]
 years_extension = [2025, 2026, 2027, 2028]
 
