@@ -14,6 +14,8 @@ TU Delft
 
 This project aims to predict the effects of the implementation of the obligatory helmet requirement on e-bikes for people under the age of 18 the following 5 years. This is based on existing data on e-bike usage, traffic accidents and traffic deaths. As well as existing data on the effects of the obligatory helmet requirement on mopeds afters 2023.
 
+
+
 **Repository Content**
 
 data: Contains all datasets we created and filtered from sources.
@@ -27,6 +29,7 @@ graphs: Contains all the visualizations created with our code.
 main report: Contains the main report notebook file and html file.
 
 README: File with instructions.
+
 
 
 **Data Sources**
