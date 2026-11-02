@@ -12,7 +12,6 @@ df_fatal_accidents_2013_plus = df_fatal_accidents[(df_fatal_accidents['Year'] >=
 
 bicycle_deaths = df_fatal_accidents_2013_plus.groupby('Year', as_index=False)['Fatalities'].sum()
 
-
 #Here new data points are made for the for the years 2026 to 2028.
 #This is based on the rate of decrease in moped fatalitties after the helmet was made mandatory in 2023.
 #The rate of decrease is then put into a linear function to predict the number of bicycle fatalities for the years 2026 to 2028, in the form y = ax + b
