@@ -39,39 +39,50 @@ All datasets are publicly available or manually retreived from reliable sources.
 
 Source Information:
 > Aandeel-fietsers-2021-2025.csv \
+
 Percentages in bike use and e-bike use (indirectly used)
 
-> Aantal_nieuwverkochte_voertuigen_met_bromfietskenteken.csv
+> Aantal_nieuwverkochte_voertuigen_met_bromfietskenteken.csv \
+
 Number of sold mopeds 2021 - 2023 (directly used)
 
-> Aantal_voertuigen_met_bromfietskenteken_2023.csv
+> Aantal_voertuigen_met_bromfietskenteken_2023.csv \
+
 Number of different mopeds used per age group 2020 - 2023 (directly used)
 
-> Brom- en snorfietsen, naar leeftijd eigenaar, 1 januari (x 1 000).csv
+> Brom- en snorfietsen, naar leeftijd eigenaar, 1 januari (x 1 000).csv \
+
 Number of mopeds per age category 2019 - 2025 (directly used)
 
-> Verkeersdoden_vanaf_1950.csv
+> Verkeersdoden_vanaf_1950.csv \
+
 Number of traffic deaths per age group and traffic mode 1950 - 2025 (directly used)
 
-> Voertuigen met een bromfietskenteken, 1 januari (x 1 000).csv
+> Voertuigen met een bromfietskenteken, 1 januari (x 1 000).csv \
+
 Number of mopeds used 2019 - 2025 (directly used)
 
-> sources_for_Aantal_SEHbezoeken
+> sources_for_Aantal_SEHbezoeken \
+
 All sources that were used to create the dataset 'Aantal_SEHbezoeken'. All datasets show numbers on severe traffic-related accidents. We used the bike-related ER-visits among the youth. (indirectly used)
 
-> Ongevallen_regio.ods
+> Ongevallen_regio.ods \
+
 By the police registered traffic accidents in the Netherlands per region and severity (indirectly used)
 
 
 Directory structure /data/: This contains the following datasets:
 
-> (Elektrisch)_fietsen_onder_jongeren.csv
+> (Elektrisch)_fietsen_onder_jongeren.csv \
+
 The filtered dataset from the source 'Aandeel-fietsers-2021-2025.csv'
 
-> Aantal_SEHbezoeken.csv
+> Aantal_SEHbezoeken.csv \
+
 The created dataset to show numbers on the bike-related ER-visits among the youth in 2020 - 2024
 
-> ongevallen_regio_BRON.csv
+> ongevallen_regio_BRON.csv \
+
 The filtered dataset from the source 'Ongevallen_regio.ods'
 
 
