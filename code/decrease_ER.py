@@ -23,7 +23,7 @@ lower_bound = [3200, 3400, 2800, 2200, 1600]
 
 
 #plot the data
-fig = px.line(df_ER_filtered, x='jaar', y='elektrische_fiets', title='ER visits for electric bikes in the Netherlands')
+fig = px.line(df_ER_filtered, x='jaar', y='elektrische_fiets', labels={'jaar': 'Year', 'elektrische_fiets': 'ER Visits'}, title='ER visits for electric bikes in the Netherlands')
 fig.update_traces(name='ER visits (2020-2024)', showlegend=True)
 
 fig.add_scatter(x=years_extension, y=upper_bound, mode='lines', line=dict(width=0), showlegend=False)

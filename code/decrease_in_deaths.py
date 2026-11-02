@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # importing csv and converting to a dataframe
-df_fatal_accidents = pd.read_csv('data/Verkeersdoden_vanaf_1950.csv')
+df_fatal_accidents = pd.read_csv('sources/Verkeersdoden_vanaf_1950.csv')
 
 #cleaning up the data to only include bicycle fatalities from 2013 and later, and only for the age groups 0-19
 df_fatal_accidents_2013_plus = df_fatal_accidents[(df_fatal_accidents['Year'] >= 2013) & 

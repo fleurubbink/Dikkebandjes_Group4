@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 #Gather all the data
-moped_possesion = pd.read_csv('data/Voertuigen met een bromfietskenteken, 1 januari (x 1 000).csv', sep=';', decimal=',')
+moped_possesion = pd.read_csv('sources/Voertuigen met een bromfietskenteken, 1 januari (x 1 000).csv', sep=';', decimal=',')
 
 #filter the data for the correct ages and vehicles
 moped_possesion_filtered = moped_possesion[["Jaar", "Snorfiets", "Bromfiets"]]
