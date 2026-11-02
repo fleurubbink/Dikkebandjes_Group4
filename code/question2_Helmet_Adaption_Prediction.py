@@ -415,5 +415,9 @@ def helmet_adoption_prediction():
     plt.tight_layout()
     save_figure(fig,"Helmet_Adaption_Prediction.png")
     plt.show()
+<<<<<<< HEAD:code/Ron_Helmet_Adaption_Prediction.py
 
 helmet_adoption_prediction()
+=======
+helmet_adoption_prediction()
+>>>>>>> origin/main:code/question2_Helmet_Adaption_Prediction.py
