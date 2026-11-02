@@ -10,7 +10,7 @@ GRAPHS_DIR = Path(__file__).resolve().parent.parent / "graphs"
 GRAPHS_DIR.mkdir(exist_ok=True)
 
 def save_figure(fig, filename):
-    """Saves the figure to the graphs directory with the given filename."""
+    """Saves the figures to the graphs directory with the given filename."""
     path = GRAPHS_DIR / filename
     fig.savefig(path, bbox_inches="tight")
     print(f"saved Figure: {path}")
