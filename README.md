@@ -76,6 +76,8 @@ All sources that were used to create the dataset 'Aantal_SEHbezoeken'. All datas
 > Ongevallen_regio.ods 
 
 By the police registered traffic accidents in the Netherlands per region and severity (indirectly used)
+<br>
+
 
 
 ### Data Information
@@ -112,6 +114,9 @@ Installed Python packages:
 - matplotlib.pyplot
 - mathplotlib.ticker
 
+<br>
+
+
 
 ### General Setup
 
@@ -119,6 +124,9 @@ To regenerate the all the graphs:
 - Install all the required packages
 - Clone our GitHub repository in VS Code
 - Run the python files
+<br>
+
+
 
 
 ### Execution Order of Code
