@@ -1,82 +1,64 @@
 """
-Write something here about what the code does and stuff
+Loads the fatalities file (Verkeersdoden_vanaf_1950.csv), keeps 2013 onwards and builds yearly fatality series per transport mode and age group.
 """
 
-# importing libraries
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
-# importing csv and converting to a dataframe
-df_fatal_accidents = pd.read_csv('data/Verkeersdoden_vanaf_1950.csv')
+data_path = 'data/Verkeersdoden_vanaf_1950.csv'
+starting_year = 2013
 
-
-#==== Preparing the dataset ====
-
-# removing Vervoerswijze and keeping transportmode
-df_fatal_accidents.drop('Vervoerswijze',inplace = True, axis = 1)
-
-# keeping the time period from 2013-2025
-time_period_mask = df_fatal_accidents['Year'] >= 2013 
-df_time_period = df_fatal_accidents[(time_period_mask)]
-
-# removing all transport modes except Bicycle and Moped 
-bicycle_mask = df_time_period['TransportMode'] == 'Bicycle'
-moped_mask = df_time_period['TransportMode'] == 'Moped'
-
-# 3 seperate dataframes (1: Moped, 2: Bicycle, 3: Both)
-df_moped = df_time_period[moped_mask]
-df_bicycle = df_time_period[bicycle_mask]
-
-df_moped_bicycle = df_time_period[(bicycle_mask | moped_mask)]
-
-# removing data with 'Onbekend' age group label
-df_moped_clean = df_moped[df_moped['Age group'] != 'Onbekend']
-df_bicycle_clean = df_bicycle[df_bicycle['Age group'] != 'Onbekend']
-df_moped_bicycle_clean = df_moped_bicycle[df_moped_bicycle['Age group'] != 'Onbekend']
-
-# resetting indeces for the 3 data frames
-df_moped_clean = df_moped_clean.reset_index(drop = True)
-df_bicycle_clean = df_bicycle_clean.reset_index(drop = True)
-df_moped_bicycle_clean = df_moped_bicycle_clean.reset_index(drop = True)
-
-# list of ages for boolean mask
+# the dataset groups 15-19 together so 18-19 year olds are also included in the data
 minor_age_groups = ['0 t/m 4', '5 t/m 9', '10 t/m 14', '15 t/m 19']
 
-# dataframes for underage fatalities
-df_fatal_minor_bicycle = df_bicycle_clean[df_bicycle_clean['Age group'].isin(minor_age_groups)]
-df_fatal_minor_moped = df_moped_clean[df_moped_clean['Age group'].isin(minor_age_groups)]
+def load_fatalities(path = data_path, starting_year = starting_year):
+    df = pd.read_csv(path)
+    df = df.drop(columns = 'Vervoerswijze') 
 
-#==== Visualising Data ====
+    # reset index for the dataframe
+    return df[df['Year'] >= starting_year].reset_index(drop = True)
 
-"""
-Plotting the total moped and bicycle fatalities per year regardless of age
-"""
-# grouping the fatalities per year
-moped_fatal_per_year = df_moped_clean.groupby('Year', as_index = False)['Fatalities'].sum()
-bicycle_fatal_per_year = df_bicycle_clean.groupby('Year', as_index = False)['Fatalities'].sum()
+def fatalities_per_year(dataframe, transport_mode = None, ages = None):
 
-plt.plot(moped_fatal_per_year['Year'], moped_fatal_per_year['Fatalities'], label = 'Moped Fatalities')
-plt.plot(bicycle_fatal_per_year['Year'], bicycle_fatal_per_year['Fatalities'], '-.', label = 'Bicycle Fatalities')
+    # apply specified transport modes
+    if transport_mode is not None:
+        dataframe = dataframe[dataframe['TransportMode'].isin(transport_mode)]
 
-"""
-Plotting the total moped and bicycle fatalities per year of minors
-Moped ages: 15 to 19
-Bicycle ages: 0 to 19
-"""
-# Keep in mind that the dataset groups 15 to 19 year old together, so numbers could be inflated
+    # applied specified ages
+    if ages is not None:
+        dataframe = dataframe[dataframe['Age group'].isin(ages)]
+    return dataframe.groupby('Year', as_index = False)['Fatalities'].sum()
 
-minor_moped_fatal_per_year = df_fatal_minor_moped.groupby('Year', as_index = False)['Fatalities'].sum()
-minor_bicycle_fatal_per_year = df_fatal_minor_bicycle.groupby('Year', as_index = False)['Fatalities'].sum()
 
-plt.plot(minor_moped_fatal_per_year['Year'], minor_moped_fatal_per_year['Fatalities'], label = 'Underage Moped Fatalities')
-plt.plot(minor_bicycle_fatal_per_year['Year'], minor_bicycle_fatal_per_year['Fatalities'], '--', label = 'Underage Bicycle Fatalities')
+# preparing dataframes for plotting 
+df_time_period = load_fatalities()
 
-plt.xlabel('Year')
-plt.ylabel('Fatalities')
-plt.title('Fatalities per Year')
-plt.legend()
+df_total_fatalities = fatalities_per_year(df_time_period)
+df_bicycle_per_year = fatalities_per_year(df_time_period, transport_mode = ['Bicycle'])
+df_moped_per_year = fatalities_per_year(df_time_period, transport_mode = ['Moped'])
+df_minor_bicycle_per_year = fatalities_per_year(df_time_period, transport_mode = ['Bicycle'], ages = minor_age_groups)
+df_minor_moped_per_year = fatalities_per_year(df_time_period, transport_mode = ['Moped'], ages = minor_age_groups)
 
-plt.ylim(bottom = 0)
+# function for plotting
+def plot_overview():
+    plt.figure()
 
-plt.show()
+    # plotting dataframes
+    plt.plot(df_total_fatalities['Year'], df_total_fatalities['Fatalities'], label = 'Total (all transport modes)')
+    plt.plot(df_bicycle_per_year['Year'], df_bicycle_per_year['Fatalities'], label = 'Bicycle')
+    plt.plot(df_moped_per_year['Year'], df_moped_per_year['Fatalities'], label = 'Moped')
+    plt.plot(df_minor_bicycle_per_year['Year'], df_minor_bicycle_per_year['Fatalities'], '--', label = 'Bicycle, minors')
+    plt.plot(df_minor_moped_per_year['Year'], df_minor_moped_per_year['Fatalities'], '--', label = 'Moped, minors')
+
+    # plot formatting
+    plt.xlabel('Year')
+    plt.ylabel('Fatalities')
+    plt.title('Fatalities per year')
+    plt.legend(loc = 'upper left')
+    plt.ylim(bottom = 0) 
+    plt.gca().yaxis.grid(True)
+    
+    plt.show()
+
+if __name__ == '__main__':
+    plot_overview()
