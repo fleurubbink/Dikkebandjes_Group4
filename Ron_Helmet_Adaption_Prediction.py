@@ -79,7 +79,7 @@ def helmet_usage_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    plt.savefig("Helmet_Usage.png", bbox_inches="tight")
+    # plt.savefig("Helmet_Usage.png", bbox_inches="tight")
     plt.show()
 
 helmet_usage_plot()
@@ -161,7 +161,7 @@ def attitudes_usage_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    plt.savefig("Attitudes_Usage", bbox_inches="tight")
+    # plt.savefig("Attitudes_Usage", bbox_inches="tight")
     plt.show()
 
 attitudes_usage_plot()
@@ -239,7 +239,7 @@ def trip_replacement_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    plt.savefig("Trip_Replacement.png", bbox_inches="tight")
+    # plt.savefig("Trip_Replacement.png", bbox_inches="tight")
     plt.show()
 
 trip_replacement_plot()
@@ -340,7 +340,7 @@ def effects_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    plt.savefig("Effects.png", bbox_inches="tight")
+    # plt.savefig("Effects.png", bbox_inches="tight")
     plt.show()
 
 effects_plot()
@@ -402,6 +402,6 @@ def helmet_adoption_prediction():
     plt.legend(loc='upper left')
 
     plt.tight_layout()
-    plt.savefig("Helmet_Adaption_Prediction.png", bbox_inches="tight")
+    # plt.savefig("Helmet_Adaption_Prediction.png", bbox_inches="tight")
     plt.show()
 helmet_adoption_prediction()
