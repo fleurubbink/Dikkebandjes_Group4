@@ -389,7 +389,7 @@ def helmet_adoption_prediction():
     })
 
     # Visualisation 
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
 
     sns.lineplot(
         x='Month',
@@ -415,4 +415,5 @@ def helmet_adoption_prediction():
     plt.tight_layout()
     save_figure(fig,"Helmet_Adaption_Prediction.png")
     plt.show()
+
 helmet_adoption_prediction()
