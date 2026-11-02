@@ -7,8 +7,7 @@ Course: TIL6022 – TIL Python Programming
 Repository Link: https://github.com/fleurubbink/Dikkebandjes_Group4
 
 TU Delft 
-&nbsp;
-&nbsp;
+<br>
 
 ## Overview
 
