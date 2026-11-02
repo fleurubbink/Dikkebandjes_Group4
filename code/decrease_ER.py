@@ -1,3 +1,4 @@
+#import the necessary libraries, pandas for data manipulation and plotly for visualization
 import pandas as pd
 import plotly.express as px
 
@@ -5,8 +6,10 @@ import plotly.express as px
 df_ER = pd.read_csv('data/Aantal_SEHbezoeken.csv', sep=';')
 df_ER_filtered = df_ER.groupby('jaar', as_index=False)['elektrische_fiets'].sum()
 
-#prediction of ER visits in 2028 based on moped trend, 2024 = 3200, 2025 is ongeveer 3500 -> 8% increase
-bicycle_2028 = 3500 * (1 - 0.364)
+#prediction of ER visits in 2028 based on moped fatalities trend, for the year 2024 there were 3200 accidents
+#for 2025 there was an 8% increase in accidents, so roughly 3500 accidents
+#the rate of decrease is from the moped fatalities after the helmet requirement, which is 36,4%
+bicycle_2028 = 3500 * (1 - 0.3)
 a = (bicycle_2028 - 3500) / 3
 b = 3500
 bicycle_2026 = a * 1 + b
