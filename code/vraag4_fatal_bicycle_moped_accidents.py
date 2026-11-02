@@ -5,7 +5,7 @@ Loads the fatalities file (Verkeersdoden_vanaf_1950.csv), keeps 2013 onwards and
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data_path = 'data/Verkeersdoden_vanaf_1950.csv'
+data_path = 'sources/Verkeersdoden_vanaf_1950.csv'
 starting_year = 2013
 
 # the dataset groups 15-19 together so 18-19 year olds are also included in the data
@@ -55,10 +55,13 @@ def plot_overview():
     plt.ylabel('Fatalities')
     plt.title('Fatalities per year')
     plt.legend(loc = 'upper left')
+    plt.ylim(top = 1000) 
     plt.ylim(bottom = 0) 
     plt.gca().yaxis.grid(True)
-    
+
     plt.show()
+    # graph_path = 'graphs/fatalities_per_year'
+    # plt.savefig()
 
 if __name__ == '__main__':
     plot_overview()
