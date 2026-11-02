@@ -37,12 +37,12 @@ from pathlib import Path
 
 # ---------------------- Settings (change these to run sensitivity checks) ---------------------- #
 Snorfiets_Wetgeving_Ingang  = 2023              # national helmet obligation for snorfiets
-Start_Fit, End_Fit          = 2019, 2023        # "pre-law" window used for the trend fits
+Start_Fit                   = 2019              # 
 Covid                       = []                # e.g. [2020, 2021] to leave out the COVID years
 End_Year                    = 2029              # end of the prediction horizon
 Start_Law                   = 2027 #+ 8 / 12    # planned: 1 September 2027
 Survey_Moment               = 0.5               # treat each e-bike survey year as measured mid-year
-
+Pre_Flatten                 = 0.5               # 1 = normal least-squares slope, 0 = flat line at the window mean
 
 # ---------------------- Load the data ---------------------- #
 moped_possesion = pd.read_csv(
@@ -62,40 +62,61 @@ ebike_filtered = (ebike_minors[ebike_minors["soort_fiets"] == "elektrisch"]
 # Used Claude in determining how to read the data
 
 
-# ---------------------- Helper: linear trend fit ---------------------- #
+# ---------------------- Linear trend fit ---------------------- #
 
-def linear_fit(years, values, exclude=()):
+def linear_fit(years, values, exclude=(), flatten=1.0):
     """Least-squares line through (years, values); returns slope, intercept."""
     years  = np.asarray(years,  dtype=float)
     values = np.asarray(values, dtype=float)
     keep   = ~np.isin(years, list(exclude))
     slope, intercept = np.polyfit(years[keep], values[keep], 1)
+    if flatten !=1.0:
+        x0, y0 = years[keep].mean(), values[keep].mean()
+        slope *= flatten
+        intercept = y0 - slope *x0
     return slope, intercept
 
 
 
 # ----------------------  Graph 1: snorfiets and bromfiets + trend fits ---------------------- #
 
-pre_law     = moped_possesion_filtered[moped_possesion_filtered["Jaar"].between(Start_Fit, End_Fit)]
-years_all   = np.arange(Start_Fit, End_Year + 1)
-Trend = f"Trend fit ({Start_Fit}-{End_Fit}, extended)"
+pre_law     = moped_possesion_filtered[moped_possesion_filtered["Jaar"].between(Start_Fit, Snorfiets_Wetgeving_Ingang)]
+post_law    = moped_possesion_filtered[moped_possesion_filtered["Jaar"] >= Snorfiets_Wetgeving_Ingang]
 
-fits   = {}
+years_all   = np.arange(Start_Fit, End_Year + 1)
+years_Pre   = np.arange(Start_Fit, Snorfiets_Wetgeving_Ingang +1)
+years_after = np.arange(Snorfiets_Wetgeving_Ingang, End_Year)
+
+Trend_pre       = f"Trend fit ({Start_Fit}-{Snorfiets_Wetgeving_Ingang}, extended)"
+Trend_after     = f"Trend fit ({Snorfiets_Wetgeving_Ingang}-{End_Year}, extended)"
+
+
+pre_fits    = {}
+post_fits   = {}
 frames = []
 for vehicle in ["Snorfiets", "Bromfiets"]:
-    slope, intercept = linear_fit(pre_law["Jaar"], pre_law[vehicle], Covid)
-    fits[vehicle] = (slope, intercept)
+    pre_fits[vehicle]  = linear_fit(pre_law["Jaar"], pre_law[vehicle], Covid, flatten=Pre_Flatten)
+    post_fits[vehicle] = linear_fit(post_law["Jaar"], post_law[vehicle])
+    slope_pre,  icpt_pre  = pre_fits[vehicle]
+    slope_post, icpt_post = post_fits[vehicle]
 
     frames.append(pd.DataFrame({
         "Year": moped_possesion_filtered["Jaar"],
         "Vehicles (x1000)": moped_possesion_filtered[vehicle],
         "Vehicle": vehicle,
         "Type": "Actual"}))
+
     frames.append(pd.DataFrame({
         "Year": years_all,
-        "Vehicles (x1000)": slope * years_all + intercept,
+        "Vehicles (x1000)": slope_pre * years_all + icpt_pre,
         "Vehicle": vehicle,
-        "Type": Trend}))
+        "Type": Trend_pre}))
+
+    frames.append(pd.DataFrame({
+        "Year": years_after,
+        "Vehicles (x1000)": slope_post * years_after + icpt_post,
+        "Vehicle": vehicle,
+        "Type": Trend_after}))
 
 df_moped = pd.concat(frames, ignore_index=True)
 
@@ -103,22 +124,31 @@ fig1 = px.line(
     df_moped, x="Year", y="Vehicles (x1000)",
     color="Vehicle", line_dash="Type", markers=True,
     color_discrete_map={"Snorfiets": "blue", "Bromfiets": "red"},
-    line_dash_map={"Actual": "solid", Trend: "dot"},
-    title="Snorfiets and bromfiets fleet (1 January) with pre-law trend fit")
+    line_dash_map={"Actual": "solid", Trend_pre: "dot", Trend_after: "dash"},
+    title="Snorfiets and bromfiets fleet (1 January): pre-law and post-law trend fits")
 fig1.for_each_trace(lambda t: t.update(mode="lines") if "Trend" in t.name else None)
 fig1.add_vline(x=Snorfiets_Wetgeving_Ingang, line_dash="dash", line_color="grey",
                annotation_text=f"Snorfiets helmet law ({Snorfiets_Wetgeving_Ingang})")
 fig1.update_xaxes(dtick=1)
 
+fig1.update_layout(
+    legend=dict(
+        orientation="h",      # horizontal, so it spreads across the top
+        yanchor="bottom",
+        y=1.02,               # just above the plot area
+        xanchor="left",
+        x=0,
+        title_text=""),       # removes the "Vehicle, Type" legend title
+    margin=dict(t=130))       # extra room at the top for the title and legend
 
 # ----------------------  Law effect from the snorfiets data  ---------------------- #
 #    effect(t) = 1 - actual / trend-without-law, t = years since the law
 #    (counts are on 1 January, so 2024 = one year after the 2023 law)
 
-snor = moped_possesion_filtered.set_index("Jaar")["Snorfiets"]
-slope_s, intercept_s = fits["Snorfiets"]
-gap = 1 - snor / (slope_s * snor.index + intercept_s)
-post = gap[gap.index > Snorfiets_Wetgeving_Ingang]
+snor    = moped_possesion_filtered.set_index("Jaar")["Snorfiets"]
+slope_s, intercept_s = pre_fits["Snorfiets"]          # was: fits["Snorfiets"]
+gap     = 1 - snor / (slope_s * snor.index + intercept_s)
+post    = gap[gap.index > Snorfiets_Wetgeving_Ingang]
 
 effect_t = np.concatenate([[0], (post.index - Snorfiets_Wetgeving_Ingang).to_numpy()])
 effect_v = np.concatenate([[0], post.to_numpy()])
@@ -164,7 +194,15 @@ fig2.for_each_trace(lambda t: t.update(mode="lines") if t.name != OBS else None)
 fig2.add_vline(x=Start_Law, line_dash="dash", line_color="grey")
                #annotation_text="Planned helmet law (Sep 2027)")
 fig2.update_xaxes(dtick=1)
-
+fig2.update_layout(
+    legend=dict(
+        orientation="h",      # horizontal, so it spreads across the top
+        yanchor="bottom",
+        y=1.02,               # just above the plot area
+        xanchor="left",
+        x=0,
+        title_text=""),       # removes the "Vehicle, Type" legend title
+    margin=dict(t=130))       # extra room at the top for the title and legend
 print("\nE-bike scenario (% of cycling 12-17 year-olds):")
 print(pd.DataFrame({"Year": years_e, "No law": baseline.round(1),
                     "With law": with_law.round(1)}).tail(5).to_string(index=False))

@@ -2,9 +2,7 @@ from tkinter import Tk, filedialog
 import pandas as pd
 import plotly.express as px
 
-seh_file = filedialog.askopenfilename(title="Selecteer (Elektrisch)_fietsen_onder_jongeren", filetypes=[("CSV-bestanden", "*.csv")])
-
-df = pd.read_csv(seh_file, encoding="cp1252", sep=';')
+df = pd.read_csv('data/(Elektrisch)_fietsen_onder_jongeren.csv', sep=';')
 print(df.head())
 
 graph = px.line(df, x="jaar", y="percentage", color="soort_fiets", markers=True, 
