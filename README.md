@@ -137,7 +137,7 @@ The code files can be run in any order. However, the logical order, following th
 - question1_electric.py
 - question1_nonelectric.py
 - Question2_Mandatory_Helmet_Teens_prediction.py
-- Ron_Helmet_Adaption_Prediction.py
+- question2_Helmet_Adaption_Prediction.py
 - decrease_ER_question3.py
 - decrease_in_deaths_question3.py
 - vraag4_fatal_bicycle_moped_accidents.py
