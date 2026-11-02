@@ -37,7 +37,7 @@ README: File with instructions.
 All datasets are publicly available or manually retreived from reliable sources. They are stored in the /data/ directory to ensure reproducibility.
 
 
-Source Information:
+### Source Information
 > Aandeel-fietsers-2021-2025.csv 
 
 Percentages in bike use and e-bike use (indirectly used)
@@ -71,7 +71,7 @@ All sources that were used to create the dataset 'Aantal_SEHbezoeken'. All datas
 By the police registered traffic accidents in the Netherlands per region and severity (indirectly used)
 
 
-Directory structure /data/: This contains the following datasets:
+### Data Information
 
 > (Elektrisch)_fietsen_onder_jongeren.csv 
 
