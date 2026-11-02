@@ -9,6 +9,8 @@ Repository Link: https://github.com/fleurubbink/Dikkebandjes_Group4
 TU Delft 
 <br>
 
+<br>
+
 ## Overview
 
 This project aims to predict the effects of the implementation of the obligatory helmet requirement on e-bikes for people under the age of 18 the following 5 years. This is based on existing data on e-bike usage, traffic accidents and traffic deaths. As well as existing data on the effects of the obligatory helmet requirement on mopeds afters 2023.
