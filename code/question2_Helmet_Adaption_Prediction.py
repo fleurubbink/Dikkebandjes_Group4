@@ -3,6 +3,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+from pathlib import Path
+
+# path to the graphs directory
+GRAPHS_DIR = Path(__file__).resolve().parent.parent / "graphs"
+GRAPHS_DIR.mkdir(exist_ok=True)
+
+def save_figure(fig, filename):
+    """Saves the figure to the graphs directory with the given filename."""
+    path = GRAPHS_DIR / filename
+    fig.savefig(path, bbox_inches="tight")
+    print(f"saved Figure: {path}")
 
 def helmet_usage_plot():
     
@@ -79,7 +90,7 @@ def helmet_usage_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    # plt.savefig("Helmet_Usage.png", bbox_inches="tight")
+    save_figure(fig,"Helmet_Usage.png")
     plt.show()
 
 helmet_usage_plot()
@@ -161,7 +172,7 @@ def attitudes_usage_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    # plt.savefig("Attitudes_Usage", bbox_inches="tight")
+    save_figure(fig,"Attitudes_Usage")
     plt.show()
 
 attitudes_usage_plot()
@@ -239,7 +250,7 @@ def trip_replacement_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    # plt.savefig("Trip_Replacement.png", bbox_inches="tight")
+    save_figure(fig,"Trip_Replacement.png")
     plt.show()
 
 trip_replacement_plot()
@@ -340,7 +351,7 @@ def effects_plot():
     
     # Adjust layout and display
     plt.tight_layout()
-    # plt.savefig("Effects.png", bbox_inches="tight")
+    save_figure(fig,"Effects.png")
     plt.show()
 
 effects_plot()
@@ -402,6 +413,6 @@ def helmet_adoption_prediction():
     plt.legend(loc='upper left')
 
     plt.tight_layout()
-    # plt.savefig("Helmet_Adaption_Prediction.png", bbox_inches="tight")
+    save_figure(fig,"Helmet_Adaption_Prediction.png")
     plt.show()
 helmet_adoption_prediction()
