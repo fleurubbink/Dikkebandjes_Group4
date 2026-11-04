@@ -93,7 +93,7 @@ helmet_cut = head_injury_share * helmet_effect
 # preparing data for plotting from 2019 to 2026
 past_years = []
 past_total = []
-past_ebike = []
+past_ebike_part = []
 
 for year in range(start_year, start_law):
     if year <= last_data_year:
@@ -102,17 +102,19 @@ for year in range(start_year, start_law):
         total = baseline_fatalities
     past_years.append(year)
     past_total.append(total)
-    past_ebike.append(total * ebike_share(year))
+    past_ebike_part.append(total * ebike_share(year))
 
 # data for the lines after the implementation of the law
 
-# lines start from the last passing year
-line_years = [past_years[-1]]
-no_law_line = [past_ebike[-1]]
-green_line = [past_ebike[-1]]
-blue_line = [past_ebike[-1]]
+# the lines start at the estimated deaths in 2026
+no_law_start = baseline_fatalities * ebike_share(start_law)
 
-for year in range(start_law, end_year + 1):
+line_years = [start_law]
+no_law_line = [no_law_start]
+green_line = [no_law_start]
+blue_line = [no_law_start]
+
+for year in range(start_law + 1, end_year + 1):
 
     # if no law is passed
     no_law = baseline_fatalities * ebike_share(year)
@@ -133,18 +135,18 @@ if __name__ == '__main__':
     # plotting the graph
     df_past = pd.DataFrame({'Year': past_years, 'Fatalities': past_total})
     fig = px.line(df_past, x = 'Year', y = 'Fatalities', labels = {'Fatalities': 'Fatalities per year'}, title = 'Fatal underage cyclists and ebike fatalities with a helmet law prediction')
-    fig.update_traces(name = 'Fatal underage cyclists', showlegend = True, line = dict(color = 'black'))
+    fig.update_traces(name = 'Fatal underage cyclists (estimated in 2026)', showlegend = True, line = dict(color = 'black'))
 
     # adding the lines
-    fig.add_scatter(x = past_years, y = past_ebike, mode = 'lines', name = 'Estimation of e-bike population in all cyclists', line = dict(color = 'red'))
-    fig.add_scatter(x = line_years, y = no_law_line, mode = 'lines', name = 'No law impemented', line = dict(dash = 'dot', color = 'grey'))
+    fig.add_scatter(x = past_years, y = past_ebike_part, mode = 'lines', name = 'Estimation of e-bike population in underage cyclists', line = dict(color = 'red'))
+    fig.add_scatter(x = [past_years[-1]] + line_years, y = [past_ebike_part[-1]] + no_law_line, mode = 'lines', name = 'No law implemented', line = dict(dash = 'dot', color = 'grey'))
 
-    fig.add_scatter(x = line_years, y = blue_line, mode = 'lines', name = 'Law: snorfiets percentages + helmet safety effect', line = dict(color = 'blue'))
+    fig.add_scatter(x = line_years, y = blue_line, mode = 'lines', name = 'Applied snorfiets percentages + helmet safety effect', line = dict(color = 'blue'))
     fig.add_scatter(x = line_years, y = green_line, mode = 'lines', name = 'Difference (mostly the effect of helmet protection)', line = dict(width = 0), fill = 'tonexty', fillcolor = 'lightgrey')
-    fig.add_scatter(x = line_years, y = green_line, mode = 'lines', name = 'Law: decline ebike population', line = dict(color = 'green'))
+    fig.add_scatter(x = line_years, y = green_line, mode = 'lines', name = 'Applied decline ebike population', line = dict(color = 'green'))
 
     fig.add_vline(x = start_law, line_dash = 'dash', line_color = 'grey', annotation_text = 'Planned helmet law')
-    fig.update_xaxes(dtick = 1)
+    fig.update_xaxes(dtick = 1, range = [start_year, end_year + 1])
 
     fig.show()
 
