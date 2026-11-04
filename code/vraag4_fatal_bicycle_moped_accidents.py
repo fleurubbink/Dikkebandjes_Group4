@@ -59,9 +59,11 @@ def plot_overview():
     plt.ylim(bottom = 0) 
     plt.gca().yaxis.grid(True)
 
+    # saving graph to graphs file
+    graph_path = 'graphs/vraag4_fatalities_per_year.png'
+    plt.savefig(graph_path)
+
     plt.show()
-    # graph_path = 'graphs/fatalities_per_year'
-    # plt.savefig()
 
 if __name__ == '__main__':
     plot_overview()
