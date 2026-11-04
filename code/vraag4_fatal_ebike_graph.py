@@ -63,9 +63,10 @@ def population_decline(year):
 
 
 # calculation of ebike population per year
-# csv with the ebike share of cyclists of 12 and older (from question 2)
+# dictionary with the ebike share of cyclists of 12 and older (from question 2)
 survey_shares = {2021: 29.1, 2023: 36.5, 2025: 43.0} 
 
+# taking the years in order
 survey_years = sorted(survey_shares.keys())
 
 # list for the values of each year 
@@ -134,11 +135,11 @@ if __name__ == '__main__':
 
     # plotting the graph
     df_past = pd.DataFrame({'Year': past_years, 'Fatalities': past_total})
-    fig = px.line(df_past, x = 'Year', y = 'Fatalities', labels = {'Fatalities': 'Fatalities per year'}, title = 'Fatal underage cyclists and ebike fatalities with a helmet law prediction')
-    fig.update_traces(name = 'Fatal underage cyclists (estimated in 2026)', showlegend = True, line = dict(color = 'black'))
+    fig = px.line(df_past, x = 'Year', y = 'Fatalities', labels = {'Fatalities': 'Fatalities per year'}, title = 'Fatalities of underage cyclists and e-bike with a helmet law prediction')
+    fig.update_traces(name = 'Fatalities in underage cyclists (estimated 2026)', showlegend = True, line = dict(color = 'black'))
 
     # adding the lines
-    fig.add_scatter(x = past_years, y = past_ebike_part, mode = 'lines', name = 'Estimation of e-bike population in underage cyclists', line = dict(color = 'red'))
+    fig.add_scatter(x = past_years, y = past_ebike_part, mode = 'lines', name = 'Prediction of underage e-bike fatalities', line = dict(color = 'red'))
     fig.add_scatter(x = [past_years[-1]] + line_years, y = [past_ebike_part[-1]] + no_law_line, mode = 'lines', name = 'No law implemented', line = dict(dash = 'dot', color = 'grey'))
 
     fig.add_scatter(x = line_years, y = blue_line, mode = 'lines', name = 'Applied snorfiets percentages + helmet safety effect', line = dict(color = 'blue'))
