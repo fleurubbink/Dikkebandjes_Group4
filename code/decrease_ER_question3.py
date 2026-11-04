@@ -8,8 +8,8 @@ df_ER_filtered = df_ER.groupby('jaar', as_index=False)['elektrische_fiets'].sum(
 
 #prediction of ER visits in 2028 based on moped fatalities trend, for the year 2024 there were 3200 accidents
 #for 2025 there was an 8% increase in accidents, so roughly 3500 accidents
-#the rate of decrease is from the moped fatalities after the helmet requirement, which is 36,4%
-bicycle_2028 = 3500 * (1 - 0.3)
+#the rate of decrease is from swov.nl, which states there was a decrease of 25% in grievous head injuries for moped users
+bicycle_2028 = 3500 * (1 - 0.25)
 a = (bicycle_2028 - 3500) / 3
 b = 3500
 bicycle_2026 = a * 1 + b
@@ -23,11 +23,11 @@ lower_bound = [3200, 3400, 2800, 2200, 1600]
 
 
 #plot the data
-fig = px.line(df_ER_filtered, x='jaar', y='elektrische_fiets', labels={'jaar': 'Year', 'elektrische_fiets': 'ER Visits'}, title='ER visits for electric bikes in the Netherlands')
+fig = px.line(df_ER_filtered, x='jaar', y='elektrische_fiets', labels={'jaar': 'Year', 'elektrische_fiets': 'ER Visits'}, title='ER visits for underage electric bike users in the Netherlands')
 fig.update_traces(name='ER visits (2020-2024)', showlegend=True)
 
 fig.add_scatter(x=years_extension, y=upper_bound, mode='lines', line=dict(width=0), showlegend=False)
 fig.add_scatter(x=years_extension, y=lower_bound, mode='lines', line=dict(width=0), name='Possible futures', fill='tonexty', fillcolor='rgba(255, 0, 0, 0.2)')
-fig.add_scatter(x=years_extension, y=bicycle_extension, mode='lines', name='Predicted fatalities (2025-2028)', line=dict(dash='dash', color='red'))
+fig.add_scatter(x=years_extension, y=bicycle_extension, mode='lines', name='Predicted ER Visits (2025-2028)', line=dict(dash='dash', color='red'))
 
 fig.show()
