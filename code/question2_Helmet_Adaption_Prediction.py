@@ -10,7 +10,7 @@ GRAPHS_DIR = Path(__file__).resolve().parent.parent / "graphs"
 GRAPHS_DIR.mkdir(exist_ok=True)
 
 def save_figure(fig, filename):
-    """Saves the figure to the graphs directory with the given filename."""
+    """Saves the figures to the graphs directory with the given filename."""
     path = GRAPHS_DIR / filename
     fig.savefig(path, bbox_inches="tight")
     print(f"saved Figure: {path}")
@@ -389,7 +389,7 @@ def helmet_adoption_prediction():
     })
 
     # Visualisation 
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
 
     sns.lineplot(
         x='Month',
@@ -415,4 +415,5 @@ def helmet_adoption_prediction():
     plt.tight_layout()
     save_figure(fig,"Helmet_Adaption_Prediction.png")
     plt.show()
+
 helmet_adoption_prediction()
