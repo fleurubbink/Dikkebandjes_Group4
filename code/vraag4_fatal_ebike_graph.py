@@ -19,11 +19,12 @@ head_injury_share = 0.63
 # fraction of decrease in fatal head injury (from SWOV)
 helmet_effect = 0.71 
 
-blue_year_shift = 0.0           # 0 = paste the snorfiets percentages as they are, 0.5 = mid-year like the group
+# compliance of the e-bikers that continue riding and wears a helmet in the three scenarios (from question 2)
+compliance_best = 0.67
+compliance_expected = 0.348
+compliance_worst = 0.15
 
-# toggle for saving graph
-save_graph = False
-
+blue_year_shift = 0.0 
 
 # loading in fatalities dataframe and taking necessary info
 df_fatalities = pd.read_csv(fatalities_file)
@@ -88,8 +89,10 @@ def ebike_share(year):
     share = min(max(share, 0), 100)
     return share / 100
 
-# fraction of the remaining ebike deaths that the helmet prevents (assuming everyone wears one)
-helmet_cut = head_injury_share * helmet_effect
+# fraction of the remaining ebike deaths that the helmet prevents in each scenario (compliance scenarios)
+helmet_cut_best = head_injury_share * helmet_effect * compliance_best
+helmet_cut_expected = head_injury_share * helmet_effect * compliance_expected
+helmet_cut_worst = head_injury_share * helmet_effect * compliance_worst
 
 # preparing data for plotting from 2019 to 2026
 past_years = []
@@ -107,29 +110,33 @@ for year in range(start_year, start_law):
 
 # data for the lines after the implementation of the law
 
-# the lines start at the estimated deaths in 2026
+# the lines start at the estimated deaths in 2027
 no_law_start = baseline_fatalities * ebike_share(start_law)
 
 line_years = [start_law]
 no_law_line = [no_law_start]
 green_line = [no_law_start]
-blue_line = [no_law_start]
+blue_best_line = [no_law_start]
+blue_expected_line = [no_law_start]
+blue_worst_line = [no_law_start]
 
 for year in range(start_law + 1, end_year + 1):
 
     # if no law is passed
     no_law = baseline_fatalities * ebike_share(year)
 
-    # if e bike fatalities declines (from going to different modes of transport)
+    # if ebike fatalities declines (from going to different modes of transport)
     green = no_law * (1 - population_decline(year))
 
-    # if e bike fatalities declines (assuming same decrease as for snorfietsen)
-    blue = no_law * (1 - snorfiets_effect(year)) * (1 - helmet_cut)
+    # if ebike fatalities declines (same decrease as for snorfietsen), then the helmet effect per scenario
+    blue = no_law * (1 - snorfiets_effect(year))
 
     line_years.append(year)
     no_law_line.append(no_law)
     green_line.append(green)
-    blue_line.append(blue)
+    blue_best_line.append(blue * (1 - helmet_cut_best))
+    blue_expected_line.append(blue * (1 - helmet_cut_expected))
+    blue_worst_line.append(blue * (1 - helmet_cut_worst))
 
 if __name__ == '__main__':
 
@@ -139,19 +146,20 @@ if __name__ == '__main__':
     fig.update_traces(name = 'Fatalities in underage cyclists (estimated 2026)', showlegend = True, line = dict(color = 'black'))
 
     # adding the lines
-    fig.add_scatter(x = past_years, y = past_ebike_part, mode = 'lines', name = 'Prediction of underage e-bike fatalities', line = dict(color = 'red'))
+    fig.add_scatter(x = past_years, y = past_ebike_part, mode = 'lines', name = 'Estimated ebike fatalities in underage cyclists', line = dict(color = 'red'))
     fig.add_scatter(x = [past_years[-1]] + line_years, y = [past_ebike_part[-1]] + no_law_line, mode = 'lines', name = 'No law implemented', line = dict(dash = 'dot', color = 'grey'))
 
-    fig.add_scatter(x = line_years, y = blue_line, mode = 'lines', name = 'Applied snorfiets percentages + helmet safety effect', line = dict(color = 'blue'))
-    fig.add_scatter(x = line_years, y = green_line, mode = 'lines', name = 'Difference (mostly the effect of helmet protection)', line = dict(width = 0), fill = 'tonexty', fillcolor = 'lightgrey')
     fig.add_scatter(x = line_years, y = green_line, mode = 'lines', name = 'Applied decline ebike population', line = dict(color = 'green'))
 
-    fig.add_vline(x = start_law, line_dash = 'dash', line_color = 'grey', annotation_text = 'Planned helmet law')
-    fig.update_xaxes(dtick = 1, range = [start_year, end_year + 1])
+    # highlight difference between best and worst case scenario
+    fig.add_scatter(x = line_years, y = blue_best_line, mode = 'lines', name = 'Range between worst and best compliance case', line = dict(width = 0), fill = 'tonexty', fillcolor = 'lightblue')
 
+    # worst case compliance 
+    fig.add_scatter(x = line_years, y = blue_worst_line, mode = 'lines', name = 'Snorfiets percentages + helmet, 15% compliance', line = dict(color = 'blue', dash = 'dot'))
+    
+    # expected case compliance
+    fig.add_scatter(x = line_years, y = blue_best_line, mode = 'lines', name = 'Snorfiets percentages + helmet, 67% compliance', line = dict(color = 'blue', dash = 'dash'))
+
+    # best case compliance
+    fig.add_scatter(x = line_years, y = blue_expected_line, mode = 'lines', name = 'Snorfiets percentages + helmet, 34.8% compliance', line = dict(color = 'blue'))
     fig.show()
-
-    # saving figure to graphs folder
-    if save_graph == True:
-
-        fig.write_image('graphs/vraag4_fatal_ebike_graph.png', scale = 2)
