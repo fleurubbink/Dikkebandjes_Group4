@@ -81,11 +81,13 @@ slope, intercept = np.polyfit(survey_years, survey_values, 1)
 
 def ebike_share(year):
 
-    # between the survey years: interpolate, outside of them: extend the line
+    # between the survey years: interpolate and outside of them: extend the line (prediction)
     if survey_years[0] <= year <= survey_years[-1]:
+
         share = np.interp(year, survey_years, survey_values)
     else:
         share = slope * year + intercept
+        
     share = min(max(share, 0), 100)
     return share / 100
 
@@ -142,7 +144,7 @@ if __name__ == '__main__':
 
     # plotting the graph
     df_past = pd.DataFrame({'Year': past_years, 'Fatalities': past_total})
-    fig = px.line(df_past, x = 'Year', y = 'Fatalities', labels = {'Fatalities': 'Fatalities per year'}, title = 'Fatalities of underage cyclists and e-bike with a helmet law prediction')
+    fig = px.line(df_past, x = 'Year', y = 'Fatalities', labels = {'Fatalities': 'Fatalities per year'}, title = 'Fatalities of underage cyclists and e-bikers')
     fig.update_traces(name = 'Fatalities in underage cyclists (estimated 2026)', showlegend = True, line = dict(color = 'black'))
 
     # adding the lines

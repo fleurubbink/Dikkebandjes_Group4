@@ -44,7 +44,7 @@ def plot_overview():
     plt.figure()
 
     # plotting dataframes
-    plt.plot(df_total_fatalities['Year'], df_total_fatalities['Fatalities'], label = 'Total (all transport modes)')
+    # plt.plot(df_total_fatalities['Year'], df_total_fatalities['Fatalities'], label = 'Total (all transport modes)')
     plt.plot(df_bicycle_per_year['Year'], df_bicycle_per_year['Fatalities'], label = 'Bicycle')
     plt.plot(df_moped_per_year['Year'], df_moped_per_year['Fatalities'], label = 'Moped')
     plt.plot(df_minor_bicycle_per_year['Year'], df_minor_bicycle_per_year['Fatalities'], '--', label = 'Bicycle, minors')
@@ -55,11 +55,10 @@ def plot_overview():
     plt.ylabel('Fatalities')
     plt.title('Fatalities per year')
     plt.legend(loc = 'upper left')
-    plt.ylim(top = 1000) 
     plt.ylim(bottom = 0) 
     plt.gca().yaxis.grid(True)
 
-    # saving graph to graphs file
+    # # saving graph to graphs file
     graph_path = 'graphs/vraag4_fatalities_per_year.png'
     plt.savefig(graph_path)
 
