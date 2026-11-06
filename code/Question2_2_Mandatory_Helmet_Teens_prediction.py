@@ -34,7 +34,7 @@ import plotly.io as pio
 from pathlib import Path
 
 pio.renderers.default = "notebook"
-DATA_DIR = Path("data")
+DATA_DIR = Path("sources")
 
 # ---------------------- Settings (change these to run sensitivity checks) ---------------------- #
 Snorfiets_Wetgeving_Ingang  = 2023              # national helmet obligation for snorfiets
