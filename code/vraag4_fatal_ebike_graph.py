@@ -87,7 +87,7 @@ def ebike_share(year):
         share = np.interp(year, survey_years, survey_values)
     else:
         share = slope * year + intercept
-        
+
     share = min(max(share, 0), 100)
     return share / 100
 
@@ -140,9 +140,30 @@ for year in range(start_law + 1, end_year + 1):
     blue_expected_line.append(blue * (1 - helmet_cut_expected))
     blue_worst_line.append(blue * (1 - helmet_cut_worst))
 
+### tables for the report
+df_predictions = pd.DataFrame({'Year': line_years, 'No law': no_law_line, 'Green': green_line, 'Blue (worst)': blue_worst_line, 'Blue (expected)': blue_expected_line, 'Blue (best)': blue_best_line})
+
+# avoided deaths compared to no law baseline prediction
+df_avoided = pd.DataFrame({'Year': line_years})
+
+df_avoided['Green'] = df_predictions['No law'] - df_predictions['Green']
+df_avoided['Green %'] = df_avoided['Green'] / df_predictions['No law'] * 100
+
+df_avoided['Blue (worst)'] = df_predictions['No law'] - df_predictions['Blue (worst)']
+df_avoided['Blue (worst) %'] = df_avoided['Blue (worst)'] / df_predictions['No law'] * 100
+
+df_avoided['Blue (expected)'] = df_predictions['No law'] - df_predictions['Blue (expected)']
+df_avoided['Blue (expected) %'] = df_avoided['Blue (expected)'] / df_predictions['No law'] * 100
+
+df_avoided['Blue (best)'] = df_predictions['No law'] - df_predictions['Blue (best)']
+df_avoided['Blue (best) %'] = df_avoided['Blue (best)'] / df_predictions['No law'] * 100
+
+# 2027 is left out because compliance is not in full effect that year
+df_avoided = df_avoided[df_avoided['Year'] > start_law]
+
 if __name__ == '__main__':
 
-    # plotting the graph
+    ### plotting the graph
     df_past = pd.DataFrame({'Year': past_years, 'Fatalities': past_total})
     fig = px.line(df_past, x = 'Year', y = 'Fatalities', labels = {'Fatalities': 'Fatalities per year'}, title = 'Fatalities of underage cyclists and e-bikers')
     fig.update_traces(name = 'Fatalities in underage cyclists (estimated 2026)', showlegend = True, line = dict(color = 'black'))
@@ -159,9 +180,15 @@ if __name__ == '__main__':
     # worst case compliance 
     fig.add_scatter(x = line_years, y = blue_worst_line, mode = 'lines', name = 'Snorfiets percentages + helmet, 15% compliance', line = dict(color = 'blue', dash = 'dot'))
     
-    # expected case compliance
+    # best case compliance
     fig.add_scatter(x = line_years, y = blue_best_line, mode = 'lines', name = 'Snorfiets percentages + helmet, 67% compliance', line = dict(color = 'blue', dash = 'dash'))
 
-    # best case compliance
+    # expected case compliance
     fig.add_scatter(x = line_years, y = blue_expected_line, mode = 'lines', name = 'Snorfiets percentages + helmet, 34.8% compliance', line = dict(color = 'blue'))
+
+    ### printing tables for the report
+    print(df_predictions.round(1))
+    print(' ')
+    print(df_avoided.round(1))
+
     fig.show()
