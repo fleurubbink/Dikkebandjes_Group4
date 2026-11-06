@@ -1,6 +1,6 @@
 import pandas as pd
 import plotly.express as px
-from pathlib import Path
+from pathlib import Path 
 
 # reads the CSV file with the data on e-bike-related ER visits among youth
 df = pd.read_csv('data/Aantal_SEHbezoeken.csv', sep=';')
