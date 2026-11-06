@@ -11,10 +11,10 @@ print(df.head())
 # creates a line graph with the data on biking trends among youth
 graph = px.line(df, x="jaar", y="percentage", color="soort_fiets", markers=True, 
                  title="Trend in (elektric) biking among youth", 
-                 color_discrete_map={'elektrisch': 'orange', 'uitsluitend_elektrisch': 'yellow', 'uitsluitend_niet_elektrisch': 'red'})
+                 color_discrete_map={'elektrisch': 'orange', 'uitsluitend_elektrisch': 'purple', 'uitsluitend_niet_elektrisch': 'red'})
 
 # adjusts the layout of the graph
-graph.update_layout(template="plotly_dark", xaxis_title="Year", yaxis_title="Percentage bikers", legend_title="Mode of biking", 
+graph.update_layout(xaxis_title="Year", yaxis_title="Percentage bikers", legend_title="Mode of biking", 
                      xaxis=dict(tickmode="linear", tick0=0, dtick=1), yaxis=dict(tickmode="linear", tick0=0, dtick=10), 
                      legend=dict(yanchor="top", y=0.79, xanchor="left", x=0.05))
 
